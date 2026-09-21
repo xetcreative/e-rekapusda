@@ -78,16 +78,8 @@
 
     <section id="welcomeScreen" class="flex-1 min-h-screen bg-slate-950 text-white">
       <div class="flex min-h-screen">
-        <aside id="welcomeSidebar" class="hidden md:flex w-64 shrink-0 flex-col border-r border-white/10 bg-slate-900/80 p-5">
-          <div class="mb-8 flex items-center gap-3"><div class="rounded-xl bg-emerald-400 p-3 text-slate-950"><i class="ph ph-bank text-2xl"></i></div><div><b class="text-sm">DUTA ASWAJA</b><p class="text-xs text-slate-400">Sistem Informasi</p></div></div>
-          <p class="mb-3 text-xs uppercase tracking-widest text-slate-500">Navigasi</p>
-          <a href="#welcomeHome" class="rounded-xl bg-white/10 px-4 py-3 text-sm"><i class="ph ph-house mr-2"></i>Beranda</a>
-          <a href="#welcomeFeatures" class="mt-2 rounded-xl px-4 py-3 text-sm text-slate-300 hover:bg-white/10"><i class="ph ph-squares-four mr-2"></i>Fitur Sistem</a>
-          <a href="#welcomeLogin" class="mt-2 rounded-xl px-4 py-3 text-sm text-slate-300 hover:bg-white/10"><i class="ph ph-sign-in mr-2"></i>Login Pengguna</a>
-          <div class="mt-auto text-xs text-slate-500">Pondok Pesantren Duta Aswaja</div>
-        </aside>
         <div class="flex-1">
-          <nav class="flex items-center justify-between border-b border-white/10 px-5 py-4 md:px-10"><button class="md:hidden rounded-lg bg-white/10 px-3 py-2" onclick="document.getElementById('welcomeSidebar').classList.toggle('hidden');document.getElementById('welcomeSidebar').classList.toggle('flex')"><i class="ph ph-list text-xl"></i></button><span class="text-sm font-semibold">Portal Transfer Uang Saku Santri</span><button onclick="openModal('authModal')" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-bold text-slate-950">Login <i class="ph ph-arrow-right ml-1"></i></button></nav>
+          <nav class="flex items-center justify-between border-b border-white/10 px-5 py-4 md:px-10"><span class="text-sm font-semibold">Portal Transfer Uang Saku Santri</span><button onclick="openModal('authModal')" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-bold text-slate-950">Login <i class="ph ph-arrow-right ml-1"></i></button></nav>
           <div id="welcomeHome" class="mx-auto max-w-6xl px-6 py-16 md:px-12 md:py-24"><span class="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-xs text-emerald-300">PORTAL RESMI • DUTA ASWAJA</span><h1 class="mt-7 max-w-3xl text-4xl font-bold leading-tight md:text-6xl">Sistem Informasi<br><span class="text-emerald-300">Transfer Uang Saku Santri</span></h1><p class="mt-5 max-w-2xl text-slate-300">Kelola, pantau, dan verifikasi transfer uang saku santri secara tertib dalam satu sistem.</p><div id="welcomeLogin" class="mt-8 flex flex-wrap gap-3"><button onclick="openModal('authModal')" class="rounded-xl bg-emerald-400 px-6 py-3 font-bold text-slate-950"><i class="ph ph-lock-key mr-2"></i>Masuk ke Sistem</button><a href="#welcomeFeatures" class="rounded-xl border border-white/15 px-6 py-3 font-semibold">Lihat Fitur</a></div>
             <div id="welcomeFeatures" class="mt-16 grid gap-4 sm:grid-cols-3"><div class="rounded-2xl border border-white/10 bg-white/5 p-5"><i class="ph ph-wallet text-2xl text-emerald-300"></i><h3 class="mt-3 font-bold">Data Transfer</h3><p class="mt-2 text-sm text-slate-400">Pencatatan dan pemantauan transaksi.</p></div><div class="rounded-2xl border border-white/10 bg-white/5 p-5"><i class="ph ph-shield-check text-2xl text-emerald-300"></i><h3 class="mt-3 font-bold">Verifikasi</h3><p class="mt-2 text-sm text-slate-400">Pemeriksaan transaksi oleh petugas berwenang.</p></div><div class="rounded-2xl border border-white/10 bg-white/5 p-5"><i class="ph ph-chart-bar text-2xl text-emerald-300"></i><h3 class="mt-3 font-bold">Rekap Otomatis</h3><p class="mt-2 text-sm text-slate-400">Ringkasan data untuk membantu administrasi.</p></div></div>
             <p class="mt-12 text-xs text-slate-500">© Pondok Pesantren Duta Aswaja</p></div></div></div></section>
@@ -480,6 +472,32 @@
         </div>
     </div>
 
+    <!-- Konfirmasi Penyaluran Modal -->
+    <div id="disbursementModal" class="fixed inset-0 z-[70] hidden">
+      <div class="absolute inset-0 bg-black/80 backdrop-blur-sm" onclick="closeModal('disbursementModal')"></div>
+      <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
+        <div class="glass w-full max-w-lg rounded-2xl shadow-2xl pointer-events-auto flex flex-col max-h-[90vh]">
+          <div class="p-5 border-b border-white/10 flex justify-between items-center bg-black/40 rounded-t-2xl">
+            <h2 class="text-lg font-bold text-white"><i class="ph ph-bank text-santri-400"></i> Input Penyaluran ke Ustadz</h2>
+            <button type="button" onclick="closeModal('disbursementModal')" class="text-gray-400 hover:text-white"><i class="ph ph-x text-xl"></i></button>
+          </div>
+          <div class="p-5 overflow-y-auto custom-scrollbar">
+            <div id="disbursementInfo" class="mb-4 rounded-xl bg-black/30 border border-white/10 p-3 text-sm text-gray-300"></div>
+            <form id="disbursementForm" class="space-y-4">
+              <input type="hidden" id="disbursementTransferId">
+              <div><label class="block text-xs text-gray-300 mb-1.5">Tanggal Penyaluran</label><input id="disbursementDate" type="date" required class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white text-sm [color-scheme:dark]"></div>
+              <div><label class="block text-xs text-gray-300 mb-1.5">Nominal Disalurkan (Rp)</label><input id="disbursementAmount" type="number" min="1" required class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white text-sm"></div>
+              <div><label class="block text-xs text-gray-300 mb-1.5">Nama Ustadz Penerima</label><input id="disbursementUstadz" required class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white text-sm"></div>
+              <div><label class="block text-xs text-gray-300 mb-1.5">Bank & Nomor Rekening Ustadz</label><input id="disbursementBankAccount" required placeholder="Contoh: BSI - 712xxxx a.n. Ustadz" class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white text-sm"></div>
+              <div><label class="block text-xs text-gray-300 mb-1.5">Bukti Transfer (gambar)</label><input id="disbursementProof" type="file" accept="image/*" required class="w-full text-xs text-gray-300"><img id="disbursementPreview" class="hidden mt-2 max-h-40 rounded-lg" alt="Preview bukti"></div>
+              <div><label class="block text-xs text-gray-300 mb-1.5">Catatan (opsional)</label><textarea id="disbursementNote" rows="2" class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white text-sm"></textarea></div>
+              <button id="saveDisbursementBtn" type="submit" class="w-full bg-gradient-to-r from-blue-600 to-cyan-600 text-white font-semibold py-2.5 px-4 rounded-xl">Simpan Konfirmasi Penyaluran</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- View Image Modal -->
     <div id="imageModal" class="fixed inset-0 z-[60] hidden">
         <div class="absolute inset-0 bg-black/90 backdrop-blur-md transition-opacity" onclick="closeModal('imageModal')"></div>
@@ -605,7 +623,7 @@
                 
                 const savedUser = localStorage.getItem('santri_active_user');
                 if (savedUser) {
-                    try { const parsed = JSON.parse(savedUser); if (parsed && parsed.role !== 'admin') { activeUser = parsed; activeRole = parsed.role || 'ustadz'; } } catch(e){}
+                    try { const parsed = JSON.parse(savedUser); if (parsed && ['admin','ustadz'].includes(parsed.role) && parsed.id && parsed.name) { activeUser = parsed; activeRole = parsed.role; revealDashboard(); } else { localStorage.removeItem('santri_active_user'); } } catch(e) { localStorage.removeItem('santri_active_user'); }
                 }
                 
                 subscribeToUserAccounts();
@@ -885,6 +903,7 @@
             const bannerIcon = document.getElementById('roleBannerIcon');
 
             if (activeRole === 'admin') {
+                if (currentKamarFilter === '__no_room' || !currentKamarFilter) currentKamarFilter = 'all';
                 bannerTitle.innerText = "Mode Admin / Bendahara Pusat";
                 bannerDesc.innerText = "Akses penuh: Verifikasi transaksi, hapus data, & rekap statistik seluruh kamar santri.";
                 bannerIcon.className = "p-2.5 rounded-xl bg-amber-500/20 text-amber-400 text-xl";
@@ -901,6 +920,7 @@
             }
 
             if (activeRole === 'ustadz') {
+                currentKamarFilter = String(activeUser.kamar || '__no_room').trim();
                 const inputUstadz = document.getElementById('inputUstadz');
                 const inputKamar = document.getElementById('inputKamar');
                 if (inputUstadz) inputUstadz.value = activeUser.name;
@@ -925,8 +945,10 @@
         };
 
         window.setKamarFilter = (kamar) => {
-            currentKamarFilter = kamar;
+            const chosen = String(kamar || 'all').trim();
+            currentKamarFilter = activeRole === 'ustadz' ? String(activeUser?.kamar || '__no_room').trim() : chosen;
             renderTable();
+            updateStats();
         };
 
         if (searchInput) {
@@ -937,16 +959,32 @@
         }
 
         function updateKamarFilterDropdown() {
+            if (!kamarFilterSelect) return;
+            // Ustadz hanya boleh memilih kamar yang ditetapkan pada akunnya.
+            if (activeRole === 'ustadz') {
+                const ownRoom = String(activeUser?.kamar || '').trim();
+                kamarFilterSelect.innerHTML = '';
+                if (ownRoom && ownRoom !== 'Semua Kamar') {
+                    const opt = document.createElement('option');
+                    opt.value = ownRoom; opt.textContent = ownRoom; opt.selected = true;
+                    kamarFilterSelect.appendChild(opt);
+                    currentKamarFilter = ownRoom;
+                } else {
+                    kamarFilterSelect.innerHTML = '<option value="__no_room">Kamar belum ditetapkan</option>';
+                    currentKamarFilter = '__no_room';
+                }
+                kamarFilterSelect.disabled = true;
+                return;
+            }
+            kamarFilterSelect.disabled = false;
             const defaultRooms = ["Kamar Nafi'", "Kamar Abu Amr", "Kamar Hafsh", "Kamar Ibnu Amir", "Kamar Ibnu Katsir", "Kamar Ashim", "Kamar Hamzah & Ar Razi"];
             const transfersRooms = transfers.map(t => t.kamar).filter(Boolean);
             const kamars = [...new Set([...defaultRooms, ...transfersRooms])].sort();
-            
-            kamarFilterSelect.innerHTML = `<option value="all">Semua Kamar</option>`;
+            const retainedFilter = currentKamarFilter;
+            kamarFilterSelect.innerHTML = '<option value="all">Semua Kamar</option>';
             kamars.forEach(k => {
-                const opt = document.createElement('option');
-                opt.value = k;
-                opt.textContent = k;
-                if (k === currentKamarFilter) opt.selected = true;
+                const opt = document.createElement('option'); opt.value = k; opt.textContent = k;
+                if (k === retainedFilter) opt.selected = true;
                 kamarFilterSelect.appendChild(opt);
             });
         }
@@ -1098,7 +1136,11 @@
         };
 
         function renderTable() {
-            let filtered = transfers;
+            // Batas tampilan wajib diterapkan sebelum filter pencarian/status.
+            // Akun Ustadz tidak pernah mendapatkan baris kamar lain di dashboard.
+            let filtered = activeRole === 'ustadz'
+                ? transfers.filter(t => !!activeUser?.kamar && activeUser.kamar !== 'Semua Kamar' && t.kamar === activeUser.kamar)
+                : transfers;
 
             if (currentFilter !== 'all') {
                 filtered = filtered.filter(t => t.status === currentFilter);
@@ -1155,7 +1197,7 @@
                     } else {
                         actionsHtml = `
                             <div class="text-right text-[11px] text-gray-500">
-                                ${t.status === 'pending' ? '<span class="text-yellow-500/80">Menunggu Verifikasi Bendahara</span>' : (t.disbursedToUstadz ? `<div class="text-emerald-400">Sudah disalurkan • ${t.disbursementDate || ''}</div><div class="text-[10px] text-gray-400 mt-1">Rek: ${t.ustadzBankAccount || '-'}</div>${t.disbursementProofUrl ? `<a class="text-cyan-300 underline text-[10px]" href="${t.disbursementProofUrl}" target="_blank" rel="noopener">Lihat bukti transfer</a>` : ''}` : '<span class="text-santri-400">Tercatat • Menunggu penyaluran</span>')}
+                                ${t.status === 'pending' ? '<span class="text-yellow-500/80">Menunggu Verifikasi Bendahara</span>' : (t.disbursedToUstadz ? `<div class="text-emerald-400">Sudah disalurkan • ${t.disbursementDate || ''}</div><div class="text-[10px] text-gray-400 mt-1">Rek: ${t.ustadzBankAccount || '-'}</div>${(t.disbursementProof || t.disbursementProofUrl) ? `<button type="button" class="text-cyan-300 underline text-[10px]" onclick="viewDisbursementProof('${t.id}')">Lihat bukti transfer</button>` : ''}` : '<span class="text-santri-400">Tercatat • Menunggu penyaluran</span>')}
                             </div>
                         `;
                     }
@@ -1211,8 +1253,8 @@
             const totalsSection = document.getElementById('kamarTotalsSection');
             if (totalsSection) totalsSection.classList.toggle('hidden', activeRole !== 'admin' && !activeUser.kamar);
             const grouped = {};
-            const scopedVerified = transfers.filter(t => t.status === 'verified' && (activeRole === 'admin' || !activeUser.kamar || activeUser.kamar === 'Semua Kamar' || t.kamar === activeUser.kamar));
-            transfers.filter(t => t.status === 'verified' && (activeRole === 'admin' || !activeUser.kamar || activeUser.kamar === 'Semua Kamar' || t.kamar === activeUser.kamar)).forEach(t => {
+            const scopedVerified = transfers.filter(t => t.status === 'verified' && (activeRole === 'admin' || (!!activeUser.kamar && activeUser.kamar !== 'Semua Kamar' && t.kamar === activeUser.kamar)));
+            scopedVerified.forEach(t => {
                 const kamar = t.kamar || 'Kamar belum ditentukan';
                 if (!grouped[kamar]) grouped[kamar] = { total: 0, count: 0, paid: 0 };
                 grouped[kamar].total += Number(t.amount) || 0;
@@ -1230,28 +1272,57 @@
             el.innerHTML = visible.length ? visible.map(([k,v]) => `<div class="rounded-xl bg-slate-950/60 border border-cyan-400/20 p-3 hover:border-fuchsia-400/40 transition-all"><div class="text-sm font-semibold text-white">${k}</div><div class="text-lg font-bold text-cyan-300 mt-1">${formatRp(v.total)}</div><div class="text-[11px] text-gray-400">${v.count} transaksi • Dikonfirmasi ke ustadz: ${formatRp(v.paid)}</div></div>`).join('') : '<p class="text-xs text-gray-500">Belum ada transfer terverifikasi untuk kamar ini.</p>';
         }
 
-        window.confirmDisbursement = async (id) => {
+        window.confirmDisbursement = (id) => {
             if (activeRole !== 'admin') { showToast('Hanya Bendahara Pusat yang dapat mengonfirmasi penyaluran.', 'error'); return; }
             const t = transfers.find(x => x.id === id);
-            if (!t) return;
-            const transferDate = prompt('Tanggal penyaluran (YYYY-MM-DD):', new Date().toISOString().slice(0,10));
-            if (!transferDate) return;
-            const bankAccount = prompt('Nomor rekening bank ustadz penerima:');
-            if (!bankAccount || !bankAccount.trim()) { showToast('Nomor rekening wajib diisi.', 'error'); return; }
-            const receiptUrl = prompt('Tautan bukti transfer (URL gambar/PDF):');
-            if (!receiptUrl || !/^https?:\/\//i.test(receiptUrl.trim())) { showToast('Tautan bukti transfer wajib berupa URL http/https.', 'error'); return; }
-            try {
-                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'transfers', id);
-                await updateDoc(docRef, { disbursedToUstadz: true, disbursedAt: Date.now(), disbursementDate: transferDate, ustadzBankAccount: bankAccount.trim(), disbursementProofUrl: receiptUrl.trim(), disbursedBy: activeUser.name, assignedUstadz: t.ustadz || '' });
-                showToast(`Konfirmasi transfer ke ${t.ustadz || 'ustadz kamar'} tersimpan.`, 'success');
-            } catch (err) { console.error(err); showToast('Gagal menyimpan konfirmasi penyaluran.', 'error'); }
+            if (!t || t.status !== 'verified' || t.disbursedToUstadz) return;
+            document.getElementById('disbursementTransferId').value = id;
+            document.getElementById('disbursementInfo').innerHTML = `<b>Santri:</b> ${t.santri || '-'}<br><b>Kamar:</b> ${t.kamar || '-'}<br><b>Penginput:</b> ${t.ustadz || '-'}<br><b>Nominal transfer:</b> ${formatRp(t.amount)}`;
+            document.getElementById('disbursementDate').valueAsDate = new Date();
+            document.getElementById('disbursementAmount').value = Number(t.amount) || '';
+            document.getElementById('disbursementUstadz').value = t.ustadz || '';
+            document.getElementById('disbursementBankAccount').value = '';
+            document.getElementById('disbursementProof').value = '';
+            document.getElementById('disbursementPreview').classList.add('hidden');
+            document.getElementById('disbursementNote').value = '';
+            openModal('disbursementModal');
         };
 
+        const disbursementProofInput = document.getElementById('disbursementProof');
+        let disbursementProofData = '';
+        if (disbursementProofInput) disbursementProofInput.addEventListener('change', (e) => {
+            const file = e.target.files && e.target.files[0]; if (!file) return;
+            if (!file.type.startsWith('image/')) { showToast('Pilih file gambar.', 'error'); return; }
+            const reader = new FileReader(); reader.onload = () => {
+                const img = new Image(); img.onload = () => {
+                    const max = 1200; let w=img.width,h=img.height;
+                    if(w>h && w>max){h*=max/w;w=max;} else if(h>max){w*=max/h;h=max;}
+                    const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+                    canvas.getContext('2d').drawImage(img,0,0,w,h);
+                    disbursementProofData=canvas.toDataURL('image/jpeg',0.55);
+                    const preview=document.getElementById('disbursementPreview');preview.src=disbursementProofData;preview.classList.remove('hidden');
+                }; img.src=reader.result;
+            }; reader.readAsDataURL(file);
+        });
+        document.getElementById('disbursementForm')?.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            if(activeRole!=='admin') return;
+            if(!disbursementProofData){showToast('Harap unggah bukti transfer.', 'error');return;}
+            const id=document.getElementById('disbursementTransferId').value;
+            const amount=Number(document.getElementById('disbursementAmount').value);
+            const btn=document.getElementById('saveDisbursementBtn'); btn.disabled=true; btn.textContent='Menyimpan...';
+            try {
+                const docRef=doc(db,'artifacts',appId,'public','data','transfers',id);
+                await updateDoc(docRef, {disbursedToUstadz:true,disbursedAt:Date.now(),disbursementDate:document.getElementById('disbursementDate').value,disbursementAmount:amount,ustadzBankAccount:document.getElementById('disbursementBankAccount').value.trim(),disbursementProof:disbursementProofData,disbursementProofUrl:'',disbursementNote:document.getElementById('disbursementNote').value.trim(),disbursedBy:activeUser.name,assignedUstadz:document.getElementById('disbursementUstadz').value.trim()});
+                closeModal('disbursementModal'); showToast('Konfirmasi penyaluran berhasil disimpan.', 'success');
+            } catch(err){console.error(err);showToast('Gagal menyimpan konfirmasi. Periksa izin Firestore dan ukuran bukti.', 'error');}
+            finally{btn.disabled=false;btn.textContent='Simpan Konfirmasi Penyaluran';}
+        });
+
         function updateStats() {
-            let scopedTransfers = transfers;
-            if (activeRole === 'ustadz' && activeUser.kamar && activeUser.kamar !== 'Semua Kamar') {
-                scopedTransfers = transfers.filter(t => t.kamar === activeUser.kamar);
-            }
+            let scopedTransfers = activeRole === 'ustadz'
+                ? transfers.filter(t => !!activeUser.kamar && activeUser.kamar !== 'Semua Kamar' && t.kamar === activeUser.kamar)
+                : (currentKamarFilter !== 'all' ? transfers.filter(t => t.kamar === currentKamarFilter) : transfers);
 
             const verified = scopedTransfers.filter(t => t.status === 'verified');
             const pending = scopedTransfers.filter(t => t.status === 'pending');
@@ -1265,6 +1336,19 @@
             document.getElementById('stat-pending').innerText = formatRp(totalPending);
             document.getElementById('stat-pending-count').innerText = `${pending.length} Transaksi Menunggu`;
         }
+
+        window.viewDisbursementProof = (id) => {
+            const t = transfers.find(item => item.id === id);
+            if (activeRole === 'ustadz' && (!t || !activeUser?.kamar || t.kamar !== activeUser.kamar)) {
+                showToast('Akses ditolak: bukti hanya tersedia untuk kamar akun Anda.', 'error'); return;
+            }
+            const src = t && (t.disbursementProof || t.disbursementProofUrl);
+            if (!src) { showToast('Bukti konfirmasi tidak tersedia.', 'error'); return; }
+            const img = document.getElementById('fullImageView');
+            img.src = src;
+            img.onerror = () => { showToast('Bukti tidak dapat dimuat. Periksa data gambar/URL.', 'error'); img.onerror = null; };
+            openModal('imageModal');
+        };
 
         window.viewImage = (id) => {
             const t = transfers.find(t => t.id === id);
