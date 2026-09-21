@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistem Informasi Transfer Uang Saku Santri</title>
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Phosphor Icons -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        santri: {
+                            50: '#f0fdf4', 100: '#dcfce7', 200: '#bbf7d0',
+                            300: '#86efac', 400: '#4ade80', 500: '#22c55e',
+                            600: '#16a34a', 700: '#15803d', 800: '#166534',
+                            900: '#14532d', 950: '#052e16',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            background: linear-gradient(135deg, #000000 0%, #052e16 50%, #0a0a0a 100%);
+            min-height: 100vh;
+            color: #f3f4f6;
+        }
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.3);
+        }
+        .glass-header {
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(0,0,0,0.3); }
+        ::-webkit-scrollbar-thumb { background: rgba(34, 197, 94, 0.4); border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: rgba(34, 197, 94, 0.8); }
+        /* Cyberpunk neon interface + subtle motion */
+        body { background: radial-gradient(ellipse at 15% 0%, #172554 0%, transparent 42%), radial-gradient(ellipse at 90% 15%, #581c87 0%, transparent 38%), linear-gradient(135deg,#020617 0%,#061b2e 52%,#090014 100%); background-size: 140% 140%; animation: cyberBg 18s ease-in-out infinite alternate; }
+        .glass { border-color: rgba(34,211,238,.18); box-shadow: 0 0 18px rgba(6,182,212,.07), inset 0 0 18px rgba(168,85,247,.025); transition: border-color .25s, box-shadow .25s, transform .25s; }
+        .glass:hover { border-color: rgba(34,211,238,.38); box-shadow: 0 0 24px rgba(6,182,212,.13), 0 0 36px rgba(217,70,239,.06); }
+        header { box-shadow: 0 4px 28px rgba(6,182,212,.09); }
+        button, select, .cursor-pointer { transition: all .22s ease; }
+        button:hover { filter: drop-shadow(0 0 7px rgba(34,211,238,.28)); }
+        select { color-scheme: dark; background-color: rgba(2,6,23,.92) !important; border-color: rgba(34,211,238,.35) !important; }
+        select:focus { box-shadow: 0 0 0 2px rgba(34,211,238,.25), 0 0 18px rgba(168,85,247,.15); }
+        @keyframes cyberBg { from { background-position: 0% 0%; } to { background-position: 100% 80%; } }
+        @keyframes neonPulse { 0%,100% { box-shadow: 0 0 5px rgba(34,211,238,.16); } 50% { box-shadow: 0 0 16px rgba(217,70,239,.22); } }
+        .cyber-panel { animation: neonPulse 5s ease-in-out infinite; }
+        @media (prefers-reduced-motion: reduce) { *,*::before,*::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; } }
+        .img-preview-box {
+            background-image: repeating-linear-gradient(45deg, #111 25%, transparent 25%, transparent 75%, #111 75%, #111), repeating-linear-gradient(45deg, #111 25%, #000 25%, #000 75%, #111 75%, #111);
+            background-position: 0 0, 10px 10px;
+            background-size: 20px 20px;
+        }
+    </style>
+</head>
+<body class="font-sans antialiased overflow-x-hidden flex flex-col h-screen">
+
+
+    <section id="welcomeScreen" class="flex-1 min-h-screen bg-slate-950 text-white">
+      <div class="flex min-h-screen">
+        <aside id="welcomeSidebar" class="hidden md:flex w-64 shrink-0 flex-col border-r border-white/10 bg-slate-900/80 p-5">
+          <div class="mb-8 flex items-center gap-3"><div class="rounded-xl bg-emerald-400 p-3 text-slate-950"><i class="ph ph-bank text-2xl"></i></div><div><b class="text-sm">DUTA ASWAJA</b><p class="text-xs text-slate-400">Sistem Informasi</p></div></div>
+          <p class="mb-3 text-xs uppercase tracking-widest text-slate-500">Navigasi</p>
+          <a href="#welcomeHome" class="rounded-xl bg-white/10 px-4 py-3 text-sm"><i class="ph ph-house mr-2"></i>Beranda</a>
+          <a href="#welcomeFeatures" class="mt-2 rounded-xl px-4 py-3 text-sm text-slate-300 hover:bg-white/10"><i class="ph ph-squares-four mr-2"></i>Fitur Sistem</a>
+          <a href="#welcomeLogin" class="mt-2 rounded-xl px-4 py-3 text-sm text-slate-300 hover:bg-white/10"><i class="ph ph-sign-in mr-2"></i>Login Pengguna</a>
+          <div class="mt-auto text-xs text-slate-500">Pondok Pesantren Duta Aswaja</div>
+        </aside>
+        <div class="flex-1">
+          <nav class="flex items-center justify-between border-b border-white/10 px-5 py-4 md:px-10"><button class="md:hidden rounded-lg bg-white/10 px-3 py-2" onclick="document.getElementById('welcomeSidebar').classList.toggle('hidden');document.getElementById('welcomeSidebar').classList.toggle('flex')"><i class="ph ph-list text-xl"></i></button><span class="text-sm font-semibold">Portal Transfer Uang Saku Santri</span><button onclick="openModal('authModal')" class="rounded-xl bg-emerald-400 px-4 py-2 text-sm font-bold text-slate-950">Login <i class="ph ph-arrow-right ml-1"></i></button></nav>
+          <div id="welcomeHome" class="mx-auto max-w-6xl px-6 py-16 md:px-12 md:py-24"><span class="rounded-full border border-emerald-400/30 bg-emerald-400/10 px-4 py-2 text-xs text-emerald-300">PORTAL RESMI • DUTA ASWAJA</span><h1 class="mt-7 max-w-3xl text-4xl font-bold leading-tight md:text-6xl">Sistem Informasi<br><span class="text-emerald-300">Transfer Uang Saku Santri</span></h1><p class="mt-5 max-w-2xl text-slate-300">Kelola, pantau, dan verifikasi transfer uang saku santri secara tertib dalam satu sistem.</p><div id="welcomeLogin" class="mt-8 flex flex-wrap gap-3"><button onclick="openModal('authModal')" class="rounded-xl bg-emerald-400 px-6 py-3 font-bold text-slate-950"><i class="ph ph-lock-key mr-2"></i>Masuk ke Sistem</button><a href="#welcomeFeatures" class="rounded-xl border border-white/15 px-6 py-3 font-semibold">Lihat Fitur</a></div>
+            <div id="welcomeFeatures" class="mt-16 grid gap-4 sm:grid-cols-3"><div class="rounded-2xl border border-white/10 bg-white/5 p-5"><i class="ph ph-wallet text-2xl text-emerald-300"></i><h3 class="mt-3 font-bold">Data Transfer</h3><p class="mt-2 text-sm text-slate-400">Pencatatan dan pemantauan transaksi.</p></div><div class="rounded-2xl border border-white/10 bg-white/5 p-5"><i class="ph ph-shield-check text-2xl text-emerald-300"></i><h3 class="mt-3 font-bold">Verifikasi</h3><p class="mt-2 text-sm text-slate-400">Pemeriksaan transaksi oleh petugas berwenang.</p></div><div class="rounded-2xl border border-white/10 bg-white/5 p-5"><i class="ph ph-chart-bar text-2xl text-emerald-300"></i><h3 class="mt-3 font-bold">Rekap Otomatis</h3><p class="mt-2 text-sm text-slate-400">Ringkasan data untuk membantu administrasi.</p></div></div>
+            <p class="mt-12 text-xs text-slate-500">© Pondok Pesantren Duta Aswaja</p></div></div></div></section>
+
+    <header id="appHeader" class="hidden glass-header sticky top-0 z-30 px-4 md:px-8 py-3.5 flex items-center justify-between">
+        <button onclick="toggleAppSidebar()" class="rounded-lg bg-white/10 hover:bg-white/20 px-3 py-2 text-white" aria-label="Buka/tutup menu">☰</button>
+        <div class="flex items-center gap-3 md:gap-4">
+            <div class="bg-gradient-to-br from-white to-gray-300 p-2 md:p-2.5 rounded-xl text-black shadow-[0_0_15px_rgba(255,255,255,0.2)]">
+                <i class="ph ph-bank text-xl md:text-2xl font-bold"></i>
+            </div>
+            <div>
+                <h1 class="text-base md:text-lg font-bold text-white tracking-wide">Sistem Informasi Transfer Uang Saku Santri</h1>
+                <p class="text-xs text-santri-400 font-medium hidden sm:block">Pondok Pesantren Duta Aswaja</p>
+            </div>
+        </div>
+
+        <div class="flex items-center gap-2 md:gap-3">
+            <div id="syncBadge" class="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 text-xs font-medium">
+                <span id="syncDot" class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span id="syncText">Cloud Realtime Sync</span>
+            </div>
+
+            <!-- Active Account Indicator -->
+            <div id="userProfileBadge" class="flex items-center gap-2 bg-black/50 border border-white/10 px-3 py-1.5 rounded-xl cursor-pointer hover:bg-white/10 transition-colors" onclick="openModal('authModal')">
+                <div id="roleAvatar" class="w-7 h-7 rounded-lg bg-santri-500 text-black flex items-center justify-center font-bold text-xs">
+                    <i class="ph ph-user"></i>
+                </div>
+                <div class="text-left hidden sm:block">
+                    <div id="userNameDisplay" class="text-xs font-semibold text-white">Memuat Akun...</div>
+                    <div id="userRoleDisplay" class="text-[10px] text-gray-400">Pilih Role</div>
+                </div>
+                <i class="ph ph-caret-down text-gray-400 text-xs ml-1"></i>
+            </div>
+
+            <button onclick="exportCSV()" id="exportBtn" class="hidden md:flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white px-3.5 py-2 rounded-xl transition-colors text-xs font-medium border border-white/10">
+                <i class="ph ph-download-simple text-base"></i> Export
+            </button>
+            
+            <button onclick="openModal('addModal')" class="bg-gradient-to-r from-santri-600 to-santri-500 hover:from-santri-500 hover:to-santri-400 text-white px-3.5 py-2 md:px-4 md:py-2 rounded-xl shadow-[0_0_15px_rgba(34,197,94,0.3)] transition-all flex items-center gap-2 text-xs font-medium">
+                <i class="ph ph-plus-circle text-base"></i> <span class="hidden sm:inline">Tambah Transfer</span>
+            </button>
+        </div>
+    </header>
+
+    <aside id="appSidebar" class="hidden fixed left-0 top-0 bottom-0 z-40 w-64 bg-slate-950/95 border-r border-white/10 p-5 shadow-2xl overflow-y-auto">
+      <div class="flex items-center justify-between mb-8"><div><b class="text-emerald-300">DUTA ASWAJA</b><p class="text-xs text-slate-400">Navigasi Sistem</p></div><button onclick="toggleAppSidebar()" class="rounded-lg bg-white/10 px-3 py-2" aria-label="Tutup sidebar">✕</button></div>
+      <nav class="space-y-2 text-sm">
+        <a class="block rounded-xl px-4 py-3 hover:bg-white/10" href="#appMain" onclick="toggleAppSidebar(false)">▦ Dashboard</a>
+        <a class="block rounded-xl px-4 py-3 hover:bg-white/10" href="#kamarTotals" onclick="toggleAppSidebar(false)">◫ Rekap Saldo Kamar</a>
+        <a class="block rounded-xl px-4 py-3 hover:bg-white/10" href="#transferTableSection" onclick="toggleAppSidebar(false)">⇄ Data Transfer</a>
+        <a class="block rounded-xl px-4 py-3 hover:bg-white/10" href="#adminAccountsPanel" onclick="toggleAppSidebar(false)">♙ Kelola Akun Ustadz</a>
+      </nav><p class="mt-10 text-xs text-slate-500">Pondok Pesantren Duta Aswaja</p>
+    </aside>
+    <div id="sidebarShade" class="hidden fixed inset-0 bg-black/60 z-30" onclick="toggleAppSidebar(false)"></div>
+    <script>function toggleAppSidebar(force){const s=document.getElementById('appSidebar'), shade=document.getElementById('sidebarShade');const open=typeof force==='boolean'?force:s.classList.contains('hidden');s.classList.toggle('hidden',!open);shade.classList.toggle('hidden',!open);}</script>
+    <main id="appMain" class="hidden flex-1 overflow-y-auto p-4 md:p-8 space-y-6 md:space-y-8">
+        <section id="kamarTotalsSection" class="glass cyber-panel rounded-2xl p-5">
+          <div class="flex flex-wrap items-center justify-between gap-2 mb-3"><div><h2 class="text-base font-bold text-white">Total Saldo Transfer per Kamar</h2><p class="text-xs text-gray-400">Akumulasi transaksi yang sudah diverifikasi bendahara.</p></div><span class="text-xs text-cyan-300">◆ Rekap otomatis</span></div>
+          <label for="kamarTotalsSelect" class="block text-xs text-gray-300 mb-2">Pilih kamar untuk melihat saldo</label>
+          <select id="kamarTotalsSelect" onchange="renderKamarTotals(this.value)" class="w-full rounded-xl py-3 px-3 text-sm text-white border mb-3"><option value="__all">Semua Kamar</option></select>
+          <div id="kamarTotals" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"><p class="text-xs text-gray-500">Memuat rekap kamar...</p></div>
+        </section>
+        
+        <div id="roleBanner" class="glass rounded-2xl p-4 flex flex-col md:flex-row items-center justify-between gap-3 border-l-4 border-l-santri-500">
+            <div class="flex items-center gap-3">
+                <div id="roleBannerIcon" class="p-2.5 rounded-xl bg-santri-500/20 text-santri-400 text-xl">
+                    <i class="ph ph-shield-check"></i>
+                </div>
+                <div>
+                    <h2 id="roleBannerTitle" class="text-sm md:text-base font-bold text-white">Login Mode Admin / Bendahara</h2>
+                    <p id="roleBannerDesc" class="text-xs text-gray-400">Anda memiliki akses verifikasi, hapus data, dan rekap seluruh kamar santri.</p>
+                </div>
+            </div>
+            <button onclick="openModal('authModal')" class="text-xs bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg text-gray-300 font-medium transition-colors border border-white/10 whitespace-nowrap">
+                <i class="ph ph-arrows-clockwise"></i> Ganti Akun / Kamar
+            </button>
+            <button id="manageAccountsBtn" onclick="toggleAdminAccounts()" class="hidden text-xs bg-cyan-500/15 hover:bg-cyan-500/25 px-3 py-1.5 rounded-lg text-cyan-300 font-semibold border border-cyan-400/30 whitespace-nowrap"><i class="ph ph-users-three"></i> Kelola Akun Ustadz</button>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-6">
+            <!-- Total Diterima (Verified) -->
+            <div class="glass rounded-2xl p-5 md:p-6 relative overflow-hidden group">
+                <div class="absolute -right-4 -top-4 opacity-5 text-santri-500 group-hover:opacity-20 transition-opacity duration-500">
+                    <i class="ph ph-check-circle text-9xl"></i>
+                </div>
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="p-2 bg-santri-500/20 text-santri-400 rounded-lg">
+                        <i class="ph ph-wallet text-xl"></i>
+                    </div>
+                    <h3 class="text-gray-300 font-medium text-sm">Terverifikasi (Selesai)</h3>
+                </div>
+                <p class="text-2xl md:text-3xl font-bold text-white mt-2" id="stat-verified">Rp 0</p>
+                <p class="text-xs text-santri-400 mt-2 font-medium" id="stat-verified-count">0 Transaksi</p>
+            </div>
+
+            <!-- Total Pending -->
+            <div class="glass rounded-2xl p-5 md:p-6 relative overflow-hidden group border-l-4 border-l-yellow-500">
+                <div class="absolute -right-4 -top-4 opacity-5 text-yellow-500 group-hover:opacity-10 transition-opacity duration-500">
+                    <i class="ph ph-clock text-9xl"></i>
+                </div>
+                <div class="flex items-center gap-3 mb-2">
+                    <div class="p-2 bg-yellow-500/20 text-yellow-400 rounded-lg">
+                        <i class="ph ph-hourglass-medium text-xl"></i>
+                    </div>
+                    <h3 class="text-gray-300 font-medium text-sm">Menunggu Verifikasi</h3>
+                </div>
+                <p class="text-2xl md:text-3xl font-bold text-white mt-2" id="stat-pending">Rp 0</p>
+                <p class="text-xs text-yellow-400 mt-2 font-medium" id="stat-pending-count">0 Transaksi</p>
+            </div>
+
+            <!-- Quick Action Card -->
+            <div class="glass rounded-2xl p-5 md:p-6 flex flex-col justify-between">
+                <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs text-gray-400 font-medium">Informasi Akun</span>
+                    <span id="activeRoleBadge" class="px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-santri-500/20 text-santri-400 border border-santri-500/30">Admin</span>
+                </div>
+                <div>
+                    <h4 id="accountNameDetail" class="text-base font-bold text-white">Bendahara Pusat</h4>
+                    <p id="accountKamarDetail" class="text-xs text-gray-400 mt-0.5">Pengawas Semua Kamar</p>
+                </div>
+                <div class="mt-4 pt-3 border-t border-white/10 flex items-center justify-between text-xs text-gray-400">
+                    <span>Status Server:</span>
+                    <span id="serverStatusText" class="text-emerald-400 font-medium flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Firestore Connected</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="glass rounded-2xl p-4 flex flex-col lg:flex-row gap-4 justify-between items-center z-10 relative">
+            <div class="flex flex-col sm:flex-row gap-3 w-full lg:w-auto">
+                <div class="relative w-full sm:w-64">
+                    <i class="ph ph-magnifying-glass absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-lg"></i>
+                    <input type="text" id="searchInput" placeholder="Cari santri, wali, ustadz..." 
+                        class="w-full bg-black/50 border border-white/10 rounded-xl py-2 pl-10 pr-4 text-white text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-santri-500 transition-all">
+                </div>
+                <!-- Filter Kamar -->
+                <div class="relative w-full sm:w-48">
+                    <select id="kamarFilter" onchange="setKamarFilter(this.value)" class="w-full bg-black/50 border border-white/10 rounded-xl py-2 px-3 text-white text-sm focus:outline-none focus:ring-2 focus:ring-santri-500 transition-all">
+                        <option value="all">Semua Kamar</option>
+                    </select>
+                </div>
+            </div>
+            <div class="flex gap-2 w-full lg:w-auto overflow-x-auto pb-2 lg:pb-0 hide-scroll">
+                <button onclick="setFilter('all')" class="filter-btn active whitespace-nowrap px-3.5 py-1.5 rounded-lg text-xs font-medium bg-santri-600 text-white shadow-lg transition-all">Semua Status</button>
+                <button onclick="setFilter('pending')" class="filter-btn whitespace-nowrap px-3.5 py-1.5 rounded-lg text-xs font-medium bg-black/40 text-gray-400 border border-white/10 hover:bg-white/10 transition-all">Pending</button>
+                <button onclick="setFilter('verified')" class="filter-btn whitespace-nowrap px-3.5 py-1.5 rounded-lg text-xs font-medium bg-black/40 text-gray-400 border border-white/10 hover:bg-white/10 transition-all">Terverifikasi</button>
+                <button onclick="setFilter('rejected')" class="filter-btn whitespace-nowrap px-3.5 py-1.5 rounded-lg text-xs font-medium bg-black/40 text-gray-400 border border-white/10 hover:bg-white/10 transition-all">Ditolak</button>
+            </div>
+        </div>
+
+        <!-- Data Table -->
+        <div class="glass rounded-2xl overflow-hidden border border-white/10">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-black/60 border-b border-white/10 text-xs uppercase tracking-wider text-gray-400">
+                            <th class="p-4 font-semibold w-28">Tanggal</th>
+                            <th class="p-4 font-semibold">Santri & Kamar</th>
+                            <th class="p-4 font-semibold">Wali & Penginput</th>
+                            <th class="p-4 font-semibold">Nominal & Bank</th>
+                            <th class="p-4 font-semibold">Status Verifikasi</th>
+                            <th class="p-4 font-semibold text-center">Bukti</th>
+                            <th class="p-4 font-semibold text-right w-32">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody" class="divide-y divide-white/5 text-sm">
+                        <!-- Rows populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+            
+            <!-- Empty State -->
+            <div id="emptyState" class="hidden flex flex-col items-center justify-center py-16 text-center">
+                <div class="bg-white/5 p-4 rounded-full mb-4">
+                    <i class="ph ph-receipt text-4xl text-gray-500"></i>
+                </div>
+                <h3 class="text-lg font-medium text-gray-300 mb-1">Belum ada data transfer</h3>
+                <p class="text-gray-500 text-sm">Silakan tambah data transfer baru menggunakan tombol di atas.</p>
+            </div>
+        </div>
+        <section id="adminAccountsPanel" class="hidden glass rounded-2xl p-5 space-y-4">
+          <div class="flex flex-wrap items-center justify-between gap-3"><div><h2 class="text-base font-bold text-white">Kelola Akun Ustadz</h2><p class="text-xs text-gray-400">Admin dapat mengubah nama, kamar, dan PIN/password akun.</p></div><button onclick="openAdminCreateAccount()" class="px-4 py-2 rounded-lg bg-cyan-600 text-white text-xs font-semibold">+ Daftarkan Ustadz</button></div>
+          <div id="adminAccountsList" class="grid grid-cols-1 md:grid-cols-2 gap-3"></div>
+        </section>
+    </main>
+
+    <!-- Authentication & Role Switch Modal -->
+    <div id="authModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-md transition-opacity" onclick="closeModal('authModal')"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
+            <div class="glass w-full max-w-md rounded-2xl shadow-2xl pointer-events-auto transform transition-all overflow-hidden">
+                
+                <div class="p-5 border-b border-white/10 flex justify-between items-center bg-black/40">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="ph ph-user-circle text-santri-400 text-xl"></i> Pilih Akun Login
+                    </h2>
+                    <button onclick="closeModal('authModal')" class="text-gray-400 hover:text-white p-1 rounded-md hover:bg-white/10 transition-colors">
+                        <i class="ph ph-x text-xl"></i>
+                    </button>
+                </div>
+
+                <div class="p-6 space-y-4 max-h-[80vh] overflow-y-auto">
+                    <!-- Preset Admin Account -->
+                    <div class="p-4 rounded-xl border border-white/10 bg-black/40 hover:border-santri-500/50 transition-all cursor-pointer group" onclick="selectRole('admin')">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <div class="p-2.5 rounded-lg bg-amber-500/20 text-amber-400 font-bold">
+                                    <i class="ph ph-crown text-xl"></i>
+                                </div>
+                                <div>
+                                    <h3 class="text-sm font-bold text-white group-hover:text-santri-400 transition-colors">Bendahara Pusat (Admin)</h3>
+                                    <p class="text-xs text-gray-400">Semua Kamar • Verifikasi • Hapus • Export<br><span class="text-amber-300">Login khusus Google Admin Utama</span></p>
+                                </div>
+                            </div>
+                            <i class="ph ph-key text-gray-500 group-hover:text-santri-400"></i>
+                        </div>
+                    </div>
+
+                    <div class="relative my-2 text-center">
+                        <div class="absolute inset-0 flex items-center"><div class="w-full border-t border-white/10"></div></div>
+                        <span class="relative px-3 bg-black/80 text-[10px] text-gray-500 uppercase tracking-wider font-semibold">Atau Pilih Akun Ustadz Kamar</span>
+                    </div>
+
+                    <!-- Dynamic List of Ustadz Accounts -->
+                    <div class="space-y-2">
+                        <label for="ustadzAccountSelect" class="block text-xs text-gray-300">Pilih akun ustadz / kamar</label>
+                        <select id="ustadzAccountSelect" class="w-full rounded-xl py-3 px-3 text-sm text-white border" onchange="selectUstadzFromDropdown(this.value)">
+                            <option value="">-- Pilih akun ustadz --</option>
+                        </select>
+                    </div>
+
+                    <!-- Register New Ustadz Account Form Toggle -->
+                    <div class="pt-2 border-t border-white/10">
+                        <button onclick="toggleNewUstadzForm()" class="w-full py-2.5 text-xs text-santri-400 font-semibold flex items-center justify-center gap-2 hover:bg-white/5 rounded-xl transition-colors border border-santri-500/20">
+                            <i class="ph ph-user-plus text-base"></i> Buat / Registrasi Akun Ustadz Baru
+                        </button>
+                    </div>
+
+                    <!-- Register Ustadz Form (Hidden by default) -->
+                    <form id="newUstadzForm" class="hidden p-4 rounded-xl bg-black/60 border border-white/10 space-y-3 mt-2">
+                        <h4 class="text-xs font-bold text-white">Registrasi Ustadz Kamar Baru</h4>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">Nama Ustadz</label>
+                            <input type="text" id="regUstadzName" required placeholder="Cth: Ust. Ridwan" class="w-full bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-santri-500">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">Kamar Utama</label>
+                            <input type="text" id="regKamar" required placeholder="Cth: Kamar Nafi'" class="w-full bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-santri-500">
+                        </div>
+                        <div>
+                            <label class="block text-[11px] text-gray-400 mb-1">PIN Keamanan (4 Digit)</label>
+                            <input type="password" id="regPin" required maxlength="6" placeholder="5678" class="w-full bg-black/50 border border-white/10 rounded-lg px-3 py-2 text-xs text-white focus:outline-none focus:border-santri-500">
+                        </div>
+                        <button type="submit" class="w-full bg-santri-600 hover:bg-santri-500 text-white font-medium py-2 rounded-lg text-xs transition-colors">
+                            Simpan Akun Ustadz Baru
+                        </button>
+                    </form>
+
+                    <!-- PIN Verification Challenge Prompt Modal Section -->
+                    <div id="pinChallengeSection" class="hidden p-4 rounded-xl bg-santri-950/80 border border-santri-500/40 space-y-3">
+                        <h4 class="text-xs font-bold text-santri-400 flex items-center gap-2">
+                            <i class="ph ph-lock-key"></i> Masukkan PIN Verifikasi
+                        </h4>
+                        <p id="pinChallengeTarget" class="text-xs text-gray-300">Konfirmasi PIN untuk akun Bendahara Pusat</p>
+                        <input type="password" id="inputAuthPin" placeholder="Masukkan PIN" maxlength="6" class="w-full bg-black/70 border border-white/20 rounded-lg px-3 py-2 text-center text-lg font-bold tracking-widest text-white focus:outline-none focus:border-santri-500">
+                        <div class="flex gap-2">
+                            <button type="button" onclick="cancelPinChallenge()" class="w-1/2 bg-white/10 hover:bg-white/20 text-gray-300 text-xs py-2 rounded-lg">Batal</button>
+                            <button type="button" onclick="verifyAuthPin()" class="w-1/2 bg-santri-600 hover:bg-santri-500 text-white font-bold text-xs py-2 rounded-lg">Masuk Akun</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Transfer Modal -->
+    <div id="addModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/80 backdrop-blur-sm transition-opacity" onclick="closeModal('addModal')"></div>
+        <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
+            <div class="glass w-full max-w-lg rounded-2xl shadow-2xl pointer-events-auto transform transition-all flex flex-col max-h-[90vh]">
+                
+                <!-- Modal Header -->
+                <div class="p-5 border-b border-white/10 flex justify-between items-center bg-black/40 rounded-t-2xl">
+                    <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                        <i class="ph ph-paper-plane-tilt text-santri-400"></i> Catat Transfer Baru
+                    </h2>
+                    <button onclick="closeModal('addModal')" class="text-gray-400 hover:text-white p-1 rounded-md hover:bg-white/10 transition-colors">
+                        <i class="ph ph-x text-xl"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Body (Scrollable) -->
+                <div class="p-5 overflow-y-auto custom-scrollbar flex-1">
+                    <form id="transferForm" class="space-y-4">
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1.5">Tanggal Transfer</label>
+                                <input type="date" id="inputDate" required class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-santri-500 focus:ring-1 focus:ring-santri-500 [color-scheme:dark]">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1.5">Nama Santri</label>
+                                <input type="text" id="inputSantri" required placeholder="Cth: Ahmad Fulan" class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-santri-500 focus:ring-1 focus:ring-santri-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1.5">Kamar / Asrama</label>
+                                <input type="text" id="inputKamar" required placeholder="Cth: Kamar Nafi'" class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-santri-500 focus:ring-1 focus:ring-santri-500" list="kamarSuggestions">
+                                <datalist id="kamarSuggestions">
+                                    <option value="Kamar Nafi'">
+                                    <option value="Kamar Abu Amr">
+                                    <option value="Kamar Hafsh">
+                                    <option value="Kamar Ibnu Amir">
+                                    <option value="Kamar Ibnu Katsir">
+                                    <option value="Kamar Ashim">
+                                    <option value="Kamar Hamzah & Ar Razi">
+                                </datalist>
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1.5">Nama Ustadz Penginput</label>
+                                <input type="text" id="inputUstadz" required placeholder="Cth: Ust. Naza" class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-santri-500 focus:ring-1 focus:ring-santri-500">
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1.5">Nama Pengirim (Wali)</label>
+                                <input type="text" id="inputSender" required placeholder="Cth: Bpk. Budi" class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-santri-500 focus:ring-1 focus:ring-santri-500">
+                            </div>
+                            <div>
+                                <label class="block text-xs font-medium text-gray-300 mb-1.5">Bank/E-Wallet Tujuan</label>
+                                <select id="inputBank" required class="w-full bg-black/50 border border-white/10 rounded-xl px-3 py-2 text-white text-sm focus:outline-none focus:border-santri-500 focus:ring-1 focus:ring-santri-500">
+                                    <option value="BSI">BSI (Bank Syariah Indonesia)</option>
+                                    <option value="BRI">BRI</option>
+                                    <option value="BCA">BCA</option>
+                                    <option value="Mandiri">Mandiri</option>
+                                    <option value="DANA">DANA</option>
+                                    <option value="Gopay">Gopay</option>
+                                    <option value="Ovo">Ovo</option>
+                                    <option value="Tunai/Lainnya">Lainnya</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-gray-300 mb-1.5">Nominal (Rp)</label>
+                            <div class="relative">
+                                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 font-medium text-sm">Rp</span>
+                                <input type="number" id="inputAmount" required min="1000" placeholder="500000" class="w-full bg-black/50 border border-white/10 rounded-xl pl-10 pr-3 py-2 text-white text-sm placeholder-gray-600 focus:outline-none focus:border-santri-500 focus:ring-1 focus:ring-santri-500">
+                            </div>
+                        </div>
+
+                        <!-- Image Upload Area -->
+                        <div>
+                            <label class="block text-xs font-medium text-gray-300 mb-1.5">Bukti Transfer (Gambar)</label>
+                            <div class="border-2 border-dashed border-white/20 rounded-xl p-4 text-center hover:border-santri-500/50 transition-colors relative bg-black/30 group">
+                                <input type="file" id="inputFile" accept="image/*" class="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10" required>
+                                
+                                <div id="uploadPlaceholder" class="flex flex-col items-center justify-center space-y-2 py-3">
+                                    <div class="p-2.5 bg-white/5 rounded-full group-hover:bg-santri-500/10 group-hover:text-santri-400 transition-colors">
+                                        <i class="ph ph-upload-simple text-xl"></i>
+                                    </div>
+                                    <p class="text-xs text-gray-400"><span class="text-santri-400 font-medium">Klik untuk upload</span> foto bukti</p>
+                                    <p class="text-[10px] text-gray-600">Kompresi otomatis & simpan langsung di cloud</p>
+                                </div>
+                                
+                                <div id="uploadPreviewContainer" class="hidden relative rounded-lg overflow-hidden img-preview-box h-32 w-full flex items-center justify-center">
+                                    <img id="uploadPreview" src="" alt="Preview" class="max-h-full max-w-full object-contain">
+                                    <div class="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                                        <span class="text-white text-xs font-medium flex items-center gap-2">
+                                            <i class="ph ph-arrows-clockwise"></i> Ganti Gambar
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="inputBase64" required>
+                        </div>
+
+                    </form>
+                </div>
+
+                <!-- Modal Footer -->
+                <div class="p-5 border-t border-white/10 bg-black/40 rounded-b-2xl">
+                    <button id="submitBtn" type="submit" form="transferForm" class="w-full bg-gradient-to-r from-santri-600 to-santri-500 hover:from-santri-500 hover:to-santri-400 text-white font-semibold py-2.5 px-4 rounded-xl shadow-lg transition-all active:scale-[0.98] flex justify-center items-center gap-2 text-sm">
+                        <i class="ph ph-floppy-disk text-lg"></i> Simpan Data Transfer
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- View Image Modal -->
+    <div id="imageModal" class="fixed inset-0 z-[60] hidden">
+        <div class="absolute inset-0 bg-black/90 backdrop-blur-md transition-opacity" onclick="closeModal('imageModal')"></div>
+        <div class="absolute top-4 right-4 z-[61]">
+             <button onclick="closeModal('imageModal')" class="text-gray-300 hover:text-white bg-black/50 p-2 rounded-full hover:bg-white/20 border border-white/10 transition-all">
+                <i class="ph ph-x text-xl"></i>
+            </button>
+        </div>
+        <div class="absolute inset-0 flex items-center justify-center p-4 pointer-events-none">
+            <div class="pointer-events-auto max-w-3xl max-h-screen flex flex-col items-center">
+                <img id="fullImageView" src="" alt="Bukti Transfer" class="max-w-full max-h-[85vh] rounded-lg shadow-2xl border border-white/20 object-contain bg-black">
+                <div class="mt-4 glass px-6 py-2.5 rounded-full text-white text-xs font-medium border border-white/10 flex items-center gap-2">
+                    <i class="ph ph-info"></i> Bukti Transfer Santri
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notifications Container -->
+    <div id="toastContainer" class="fixed bottom-4 right-4 md:top-24 md:right-8 z-[70] flex flex-col gap-2 pointer-events-none"></div>
+
+    <!-- Firebase Cloud Backend Integration -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, updateDoc, deleteDoc, doc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Global Modal & UI helper functions Attached to window for inline onclick accessibility
+        window.openModal = function(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.remove('hidden');
+        };
+
+        window.closeModal = function(modalId) {
+            const modal = document.getElementById(modalId);
+            if (modal) modal.classList.add('hidden');
+        };
+
+        window.showToast = function(message, type = 'info') {
+            const container = document.getElementById('toastContainer');
+            if (!container) return;
+            const toast = document.createElement('div');
+            const bgClass = type === 'success' ? 'bg-emerald-600/90 border-emerald-400 text-white' : 
+                            type === 'error' ? 'bg-red-600/90 border-red-400 text-white' : 
+                            'bg-gray-800/90 border-gray-600 text-white';
+            const icon = type === 'success' ? 'ph-check-circle' : type === 'error' ? 'ph-x-circle' : 'ph-info';
+            toast.className = `flex items-center gap-2 px-4 py-3 rounded-xl border shadow-xl text-xs transition-all duration-300 transform translate-y-2 opacity-0 glass ${bgClass} pointer-events-auto`;
+            toast.innerHTML = `<i class="ph ${icon} text-base"></i> <span>${message}</span>`;
+            container.appendChild(toast);
+            requestAnimationFrame(() => {
+                toast.classList.remove('translate-y-2', 'opacity-0');
+            });
+            setTimeout(() => {
+                toast.classList.add('opacity-0', 'translate-y-2');
+                setTimeout(() => toast.remove(), 300);
+            }, 3000);
+        };
+
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'rekap-santri-v1';
+        
+        // Target Firebase project config provided by user
+        const firebaseConfig = {
+            apiKey: "AIzaSyCinMWbzzae2kMf2naWa1nK31mJwsT02_8",
+            authDomain: "rekabos.firebaseapp.com",
+            projectId: "rekabos",
+            storageBucket: "rekabos.firebasestorage.app",
+            messagingSenderId: "512126742869",
+            appId: "1:512126742869:web:fd609cd8a81fbcf1323fdc",
+            measurementId: "G-S0K7L52CEQ"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        let currentUser = null;
+        let transfers = [];
+        let ustadzAccounts = [];
+        
+        let activeRole = 'ustadz';
+        let activeUser = { id: 'guest', name: 'Belum Login', role: 'ustadz', kamar: '-' };
+        let targetAuthRole = null;
+
+        let currentFilter = 'all';
+        let currentKamarFilter = 'all';
+        let searchQuery = '';
+
+        const defaultUstadzList = [
+            { id: 'ust-1', name: 'Ust. Naza', kamar: 'Kamar Nafi\'', pin: '5678', role: 'ustadz' },
+            { id: 'ust-2', name: 'Ust. Afnan', kamar: 'Kamar Abu Amr', pin: '5678', role: 'ustadz' },
+            { id: 'ust-3', name: 'Ust. Jalal', kamar: 'Kamar Hafsh', pin: '5678', role: 'ustadz' },
+            { id: 'ust-4', name: 'Ust. Latif', kamar: 'Kamar Ibnu Amir', pin: '5678', role: 'ustadz' },
+            { id: 'ust-5', name: 'Ust. Agus', kamar: 'Kamar Ibnu Katsir', pin: '5678', role: 'ustadz' },
+            { id: 'ust-6', name: 'Ust. Najib', kamar: 'Kamar Ashim', pin: '5678', role: 'ustadz' },
+            { id: 'ust-7', name: 'Ust. Arifin', kamar: 'Kamar Hamzah & Ar Razi', pin: '5678', role: 'ustadz' }
+        ];
+
+        const tableBody = document.getElementById('tableBody');
+        const emptyState = document.getElementById('emptyState');
+        const searchInput = document.getElementById('searchInput');
+        const kamarFilterSelect = document.getElementById('kamarFilter');
+        const fileInput = document.getElementById('inputFile');
+        const base64Input = document.getElementById('inputBase64');
+        const previewContainer = document.getElementById('uploadPreviewContainer');
+        const uploadPlaceholder = document.getElementById('uploadPlaceholder');
+        const uploadPreview = document.getElementById('uploadPreview');
+        const form = document.getElementById('transferForm');
+
+        async function initCloud() {
+            try {
+                if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                    const res = await signInWithCustomToken(auth, __initial_auth_token);
+                    currentUser = res.user;
+                } else {
+                    try {
+                        const res = await signInAnonymously(auth);
+                        currentUser = res.user;
+                    } catch (e) {
+                        console.warn("Anonymous auth skipped or disabled:", e);
+                    }
+                }
+                updateSyncBadge(true);
+                
+                const savedUser = localStorage.getItem('santri_active_user');
+                if (savedUser) {
+                    try { const parsed = JSON.parse(savedUser); if (parsed && parsed.role !== 'admin') { activeUser = parsed; activeRole = parsed.role || 'ustadz'; } } catch(e){}
+                }
+                
+                subscribeToUserAccounts();
+                subscribeToTransfers();
+                updateRoleUI();
+            } catch (err) {
+                console.error("Cloud Auth Error:", err);
+                updateSyncBadge(false);
+            }
+        }
+
+        function updateSyncBadge(isOnline) {
+            const dot = document.getElementById('syncDot');
+            const text = document.getElementById('syncText');
+            const serverStatus = document.getElementById('serverStatusText');
+            if (!dot || !text) return;
+            if (isOnline) {
+                dot.className = "w-2 h-2 rounded-full bg-emerald-400 animate-pulse";
+                text.innerText = "Cloud Realtime Sync";
+                if (serverStatus) serverStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> Firestore Connected`;
+            } else {
+                dot.className = "w-2 h-2 rounded-full bg-red-500";
+                text.innerText = "Permission Error";
+                if (serverStatus) serverStatus.innerHTML = `<span class="w-2 h-2 rounded-full bg-red-500"></span> Check Rules`;
+            }
+        }
+
+        function subscribeToUserAccounts() {
+            const usersCol = collection(db, 'artifacts', appId, 'public', 'data', 'users');
+            onSnapshot(usersCol, (snapshot) => {
+                ustadzAccounts = [];
+                snapshot.forEach((docSnap) => {
+                    ustadzAccounts.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                
+                if (ustadzAccounts.length === 0) {
+                    ustadzAccounts = defaultUstadzList;
+                }
+                renderUstadzAccountList();
+                renderAdminAccounts();
+            }, (err) => {
+                console.error("User list error:", err);
+                if (err.code === 'permission-denied') {
+                    showToast("Aturan Keamanan Firebase menolak akses (Permission Denied). Harap perbarui Firestore Rules.", "error");
+                    updateSyncBadge(false);
+                }
+                ustadzAccounts = defaultUstadzList;
+                renderUstadzAccountList();
+            });
+        }
+
+        function subscribeToTransfers() {
+            const transfersCol = collection(db, 'artifacts', appId, 'public', 'data', 'transfers');
+
+            onSnapshot(transfersCol, (snapshot) => {
+                transfers = [];
+                snapshot.forEach((docSnap) => {
+                    transfers.push({ id: docSnap.id, ...docSnap.data() });
+                });
+                transfers.sort((a, b) => (b.timestamp || 0) - (a.timestamp || 0));
+                
+                updateKamarFilterDropdown();
+                renderTable();
+                updateStats();
+                renderKamarTotals();
+                updateSyncBadge(true);
+            }, (err) => {
+                console.error("Transfers listener error:", err);
+                if (err.code === 'permission-denied') {
+                    showToast("Firestore Rules menolak akses. Buka Firebase Console -> Firestore -> Rules lalu atur: allow read, write: if true;", "error");
+                    updateSyncBadge(false);
+                } else {
+                    showToast("Gagal menyinkronkan data cloud", "error");
+                }
+            });
+        }
+
+        function renderUstadzAccountList() {
+            const select = document.getElementById('ustadzAccountSelect');
+            if (!select) return;
+            const previous = select.value;
+            select.innerHTML = '<option value="">-- Pilih akun ustadz --</option>';
+            ustadzAccounts.forEach((u, i) => {
+                const option = document.createElement('option');
+                option.value = String(i);
+                option.textContent = `${u.name} — ${u.kamar || 'Kamar belum diatur'}`;
+                select.appendChild(option);
+            });
+            if (previous && Number(previous) < ustadzAccounts.length) select.value = previous;
+        }
+
+        window.selectUstadzFromDropdown = (value) => {
+            if (value === '') return;
+            const account = ustadzAccounts[Number(value)];
+            if (account) selectRole('ustadz', account);
+        };
+
+        window.toggleNewUstadzForm = function() {
+            if (activeRole !== 'admin') { showToast('Pendaftaran akun hanya dapat dilakukan Admin.', 'error'); return; }
+            const f = document.getElementById('newUstadzForm');
+            if (f) f.classList.toggle('hidden');
+        };
+
+        const newUstadzFormEl = document.getElementById('newUstadzForm');
+        if (newUstadzFormEl) {
+            newUstadzFormEl.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                if (activeRole !== 'admin') { showToast('Hanya Admin yang dapat mendaftarkan akun ustadz.', 'error'); return; }
+                const name = document.getElementById('regUstadzName').value.trim();
+                const kamar = document.getElementById('regKamar').value.trim();
+                const pin = document.getElementById('regPin').value.trim() || '5678';
+
+                if (!name || !kamar) return;
+
+                try {
+                    const newUser = { name, kamar, pin, role: 'ustadz', timestamp: Date.now() };
+                    const usersCol = collection(db, 'artifacts', appId, 'public', 'data', 'users');
+                    await addDoc(usersCol, newUser);
+                    
+                    showToast(`Akun ${name} berhasil didaftarkan!`, 'success');
+                    newUstadzFormEl.reset();
+                    newUstadzFormEl.classList.add('hidden');
+                } catch (err) {
+                    console.error("Register user error:", err);
+                    if (err.code === 'permission-denied') {
+                        showToast("Gagal menyimpan: Izin ditolak oleh Firestore Rules", "error");
+                    } else {
+                        showToast("Gagal mendaftarkan Ustadz baru", "error");
+                    }
+                }
+            });
+        }
+
+        window.toggleAdminAccounts = function() {
+            if (activeRole !== 'admin') { showToast('Akses khusus Admin.', 'error'); return; }
+            const panel = document.getElementById('adminAccountsPanel');
+            panel.classList.toggle('hidden');
+            renderAdminAccounts();
+            panel.scrollIntoView({behavior:'smooth', block:'start'});
+        };
+        window.openAdminCreateAccount = function() {
+            if (activeRole !== 'admin') { showToast('Akses khusus Admin.', 'error'); return; }
+            openModal('authModal');
+            document.getElementById('newUstadzForm').classList.remove('hidden');
+            showToast('Isi form pendaftaran akun ustadz pada jendela ini.', 'info');
+        };
+        function renderAdminAccounts() {
+            const host = document.getElementById('adminAccountsList'); if (!host) return;
+            host.innerHTML = '';
+            ustadzAccounts.forEach(u => {
+                const card = document.createElement('div');
+                card.className = 'p-4 rounded-xl bg-black/30 border border-cyan-400/20 flex items-center justify-between gap-3';
+                const info = document.createElement('div'); info.className='min-w-0';
+                const name = document.createElement('div'); name.className='text-sm font-semibold text-white'; name.textContent=u.name||'Ustadz';
+                const room = document.createElement('div'); room.className='text-xs text-gray-400'; room.textContent=u.kamar||'Kamar belum diatur';
+                info.append(name,room);
+                const edit = document.createElement('button'); edit.className='shrink-0 px-3 py-2 rounded-lg bg-violet-600/80 text-white text-xs'; edit.textContent='Edit Akun / PIN';
+                edit.onclick=()=>editUstadzAccount(u); card.append(info,edit); host.appendChild(card);
+            });
+            if (!ustadzAccounts.length) host.innerHTML='<p class="text-xs text-gray-400">Belum ada akun ustadz tersimpan.</p>';
+        }
+        async function editUstadzAccount(u) {
+            if (activeRole !== 'admin') { showToast('Akses khusus Admin.', 'error'); return; }
+            if (!u.id || String(u.id).startsWith('ust-')) { showToast('Akun bawaan belum tersimpan sebagai dokumen. Daftarkan akun baru melalui Admin untuk pengelolaan cloud.', 'error'); return; }
+            const name = prompt('Nama ustadz:', u.name||''); if (name===null) return;
+            const kamar = prompt('Nama kamar:', u.kamar||''); if (kamar===null) return;
+            const pin = prompt('PIN/password baru (minimal 4 karakter):', u.pin||''); if (pin===null) return;
+            if (!name.trim() || !kamar.trim() || pin.trim().length<4) { showToast('Nama, kamar, dan PIN minimal 4 karakter wajib diisi.', 'error'); return; }
+            try {
+                await updateDoc(doc(db,'artifacts',appId,'public','data','users',u.id), {name:name.trim(), kamar:kamar.trim(), pin:pin.trim()});
+                showToast('Data akun ustadz berhasil diperbarui.', 'success');
+            } catch(err) { console.error(err); showToast('Gagal memperbarui akun. Periksa izin Firestore.', 'error'); }
+        }
+
+        function revealDashboard() {
+            document.getElementById('welcomeScreen')?.classList.add('hidden');
+            document.getElementById('appHeader')?.classList.remove('hidden');
+            document.getElementById('appMain')?.classList.remove('hidden');
+        }
+
+        window.selectRole = async function(role, userObj = null) {
+            if (role === 'admin') {
+                const provider = new GoogleAuthProvider();
+                provider.setCustomParameters({ prompt: 'select_account' });
+                try {
+                    const result = await signInWithPopup(auth, provider);
+                    const email = (result.user.email || '').toLowerCase();
+                    if (!result.user.emailVerified || email !== 'pondokpesantrendutaaswaja@gmail.com') {
+                        await signOut(auth);
+                        showToast('Akun Google tidak terdaftar sebagai Admin Utama.', 'error');
+                        return;
+                    }
+                    currentUser = result.user;
+                    targetAuthRole = { id: result.user.uid, name: 'Admin Utama', role: 'admin', kamar: 'Semua Kamar', email: result.user.email };
+                    activeUser = targetAuthRole; activeRole = 'admin';
+                    localStorage.setItem('santri_active_user', JSON.stringify(activeUser));
+                    updateRoleUI(); revealDashboard(); closeModal('authModal');
+                    showToast('Login Google Admin berhasil.', 'success');
+                    return;
+                } catch (err) {
+                    console.error('Google Admin login error:', err);
+                    showToast('Login Google gagal/dibatalkan. Pastikan Google provider aktif di Firebase.', 'error');
+                    return;
+                }
+            }
+            targetAuthRole = role === 'admin' ? {
+                id: 'admin',
+                name: 'Bendahara Pusat',
+                role: 'admin',
+                kamar: 'Semua Kamar',
+                pin: ''
+            } : userObj;
+
+            const challengeSec = document.getElementById('pinChallengeSection');
+            const targetLabel = document.getElementById('pinChallengeTarget');
+            const pinInput = document.getElementById('inputAuthPin');
+
+            if (challengeSec && targetLabel && pinInput) {
+                targetLabel.innerText = `Masukkan PIN untuk akun ${targetAuthRole.name} (${targetAuthRole.kamar || 'Pusat'})`;
+                pinInput.value = '';
+                challengeSec.classList.remove('hidden');
+                pinInput.focus();
+            }
+        };
+
+        window.cancelPinChallenge = function() {
+            const challengeSec = document.getElementById('pinChallengeSection');
+            if (challengeSec) challengeSec.classList.add('hidden');
+            targetAuthRole = null;
+        };
+
+        window.verifyAuthPin = function() {
+            const pinInput = document.getElementById('inputAuthPin');
+            if (!pinInput || !targetAuthRole) return;
+
+            const enteredPin = pinInput.value.trim();
+            const expectedPin = targetAuthRole.pin || (targetAuthRole.role === 'admin' ? '1234' : '5678');
+
+            if (enteredPin === expectedPin) {
+                activeUser = targetAuthRole;
+                activeRole = targetAuthRole.role;
+                localStorage.setItem('santri_active_user', JSON.stringify(activeUser));
+                
+                updateRoleUI();
+                revealDashboard();
+                cancelPinChallenge();
+                closeModal('authModal');
+                showToast(`Login Berhasil: Selamat Datang ${activeUser.name}`, 'success');
+            } else {
+                // Jangan pernah menampilkan atau membocorkan PIN pada pesan kesalahan.
+                pinInput.value = '';
+                pinInput.setAttribute('autocomplete', 'off');
+                pinInput.focus();
+                showToast("PIN salah. Silakan coba lagi.", "error");
+            }
+        };
+
+        function updateRoleUI() {
+            const manageBtn = document.getElementById('manageAccountsBtn');
+            const adminPanel = document.getElementById('adminAccountsPanel');
+            if (manageBtn) manageBtn.classList.toggle('hidden', activeRole !== 'admin');
+            if (adminPanel && activeRole !== 'admin') adminPanel.classList.add('hidden');
+            document.getElementById('userNameDisplay').innerText = activeUser.name;
+            document.getElementById('userRoleDisplay').innerText = activeRole === 'admin' ? 'Bendahara (Admin)' : `Ustadz • ${activeUser.kamar}`;
+            
+            const roleBadge = document.getElementById('activeRoleBadge');
+            roleBadge.innerText = activeRole === 'admin' ? 'ADMIN' : 'USTADZ';
+            roleBadge.className = activeRole === 'admin' ? 
+                'px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-amber-500/20 text-amber-400 border border-amber-500/30' : 
+                'px-2 py-0.5 rounded text-[10px] font-bold uppercase bg-santri-500/20 text-santri-400 border border-santri-500/30';
+
+            document.getElementById('accountNameDetail').innerText = activeUser.name;
+            document.getElementById('accountKamarDetail').innerText = activeUser.kamar;
+
+            const bannerTitle = document.getElementById('roleBannerTitle');
+            const bannerDesc = document.getElementById('roleBannerDesc');
+            const bannerIcon = document.getElementById('roleBannerIcon');
+
+            if (activeRole === 'admin') {
+                bannerTitle.innerText = "Mode Admin / Bendahara Pusat";
+                bannerDesc.innerText = "Akses penuh: Verifikasi transaksi, hapus data, & rekap statistik seluruh kamar santri.";
+                bannerIcon.className = "p-2.5 rounded-xl bg-amber-500/20 text-amber-400 text-xl";
+                bannerIcon.innerHTML = `<i class="ph ph-shield-check"></i>`;
+            } else {
+                bannerTitle.innerText = `Mode Ustadz: ${activeUser.name} (${activeUser.kamar})`;
+                bannerDesc.innerText = `Aplikasi disesuaikan untuk pencatatan transfer santri di ${activeUser.kamar}.`;
+                bannerIcon.className = "p-2.5 rounded-xl bg-santri-500/20 text-santri-400 text-xl";
+                bannerIcon.innerHTML = `<i class="ph ph-user-gear"></i>`;
+
+                if (activeUser.kamar && activeUser.kamar !== 'Semua Kamar') {
+                    currentKamarFilter = activeUser.kamar;
+                }
+            }
+
+            if (activeRole === 'ustadz') {
+                const inputUstadz = document.getElementById('inputUstadz');
+                const inputKamar = document.getElementById('inputKamar');
+                if (inputUstadz) inputUstadz.value = activeUser.name;
+                if (inputKamar) inputKamar.value = activeUser.kamar;
+            }
+
+            renderTable();
+            updateStats();
+        }
+
+        window.setFilter = (filter) => {
+            currentFilter = filter;
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                const text = btn.innerText.toLowerCase();
+                if ((filter === 'all' && text.includes('semua')) || text.includes(filter)) {
+                    btn.className = 'filter-btn active whitespace-nowrap px-3.5 py-1.5 rounded-lg text-xs font-medium bg-santri-600 text-white shadow-lg transition-all';
+                } else {
+                    btn.className = 'filter-btn whitespace-nowrap px-3.5 py-1.5 rounded-lg text-xs font-medium bg-black/40 text-gray-400 border border-white/10 hover:bg-white/10 transition-all';
+                }
+            });
+            renderTable();
+        };
+
+        window.setKamarFilter = (kamar) => {
+            currentKamarFilter = kamar;
+            renderTable();
+        };
+
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                searchQuery = e.target.value.toLowerCase();
+                renderTable();
+            });
+        }
+
+        function updateKamarFilterDropdown() {
+            const defaultRooms = ["Kamar Nafi'", "Kamar Abu Amr", "Kamar Hafsh", "Kamar Ibnu Amir", "Kamar Ibnu Katsir", "Kamar Ashim", "Kamar Hamzah & Ar Razi"];
+            const transfersRooms = transfers.map(t => t.kamar).filter(Boolean);
+            const kamars = [...new Set([...defaultRooms, ...transfersRooms])].sort();
+            
+            kamarFilterSelect.innerHTML = `<option value="all">Semua Kamar</option>`;
+            kamars.forEach(k => {
+                const opt = document.createElement('option');
+                opt.value = k;
+                opt.textContent = k;
+                if (k === currentKamarFilter) opt.selected = true;
+                kamarFilterSelect.appendChild(opt);
+            });
+        }
+
+        const formatRp = (num) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(num || 0);
+        const formatDate = (dateStr) => {
+            if (!dateStr) return '-';
+            const opts = { day: '2-digit', month: 'short', year: 'numeric' };
+            return new Date(dateStr).toLocaleDateString('id-ID', opts);
+        };
+
+        if (fileInput) {
+            fileInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                if (!file.type.match('image.*')) {
+                    showToast('Hanya file gambar yang diizinkan!', 'error');
+                    this.value = '';
+                    return;
+                }
+
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const img = new Image();
+                    img.onload = function() {
+                        const canvas = document.createElement('canvas');
+                        const MAX_WIDTH = 500;
+                        const MAX_HEIGHT = 500;
+                        let width = img.width;
+                        let height = img.height;
+
+                        if (width > height) {
+                            if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                        } else {
+                            if (height > MAX_HEIGHT) { width *= MAX_HEIGHT / height; height = MAX_HEIGHT; }
+                        }
+
+                        canvas.width = width;
+                        canvas.height = height;
+                        const ctx = canvas.getContext('2d');
+                        ctx.drawImage(img, 0, 0, width, height);
+                        
+                        const dataUrl = canvas.toDataURL('image/jpeg', 0.5);
+                        base64Input.value = dataUrl;
+                        uploadPreview.src = dataUrl;
+                        uploadPlaceholder.classList.add('hidden');
+                        previewContainer.classList.remove('hidden');
+                    };
+                    img.src = event.target.result;
+                };
+                reader.readAsDataURL(file);
+            });
+        }
+
+        if (form) {
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                if (!base64Input.value) {
+                    showToast('Harap upload foto bukti transfer!', 'error');
+                    return;
+                }
+
+                const submitBtn = document.getElementById('submitBtn');
+                if (submitBtn) {
+                    submitBtn.disabled = true;
+                    submitBtn.innerHTML = `<i class="ph ph-spinner animate-spin text-lg"></i> Menyimpan...`;
+                }
+
+                try {
+                    const newTransfer = {
+                        date: document.getElementById('inputDate').value,
+                        santri: document.getElementById('inputSantri').value.trim(),
+                        kamar: document.getElementById('inputKamar').value.trim(),
+                        ustadz: document.getElementById('inputUstadz').value.trim(),
+                        sender: document.getElementById('inputSender').value.trim(),
+                        bank: document.getElementById('inputBank').value,
+                        amount: parseInt(document.getElementById('inputAmount').value) || 0,
+                        proofImage: base64Input.value,
+                        status: 'pending',
+                        timestamp: Date.now()
+                    };
+
+                    const transfersCol = collection(db, 'artifacts', appId, 'public', 'data', 'transfers');
+                    await addDoc(transfersCol, newTransfer);
+
+                    closeModal('addModal');
+                    showToast('Data transfer berhasil disimpan di Cloud!', 'success');
+                    
+                    form.reset();
+                    base64Input.value = '';
+                    uploadPlaceholder.classList.remove('hidden');
+                    previewContainer.classList.add('hidden');
+                    uploadPreview.src = '';
+                    document.getElementById('inputDate').valueAsDate = new Date();
+
+                    if (activeRole === 'ustadz') {
+                        document.getElementById('inputUstadz').value = activeUser.name;
+                        document.getElementById('inputKamar').value = activeUser.kamar;
+                    }
+                } catch (err) {
+                    console.error("Save error:", err);
+                    if (err.code === 'permission-denied') {
+                        showToast("Gagal menyimpan: Izin ditolak Firestore Rules. Buka Firestore -> Rules.", "error");
+                    } else {
+                        showToast("Gagal menyimpan data ke Cloud", "error");
+                    }
+                } finally {
+                    if (submitBtn) {
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = `<i class="ph ph-floppy-disk text-lg"></i> Simpan Data Transfer`;
+                    }
+                }
+            });
+        }
+
+        window.updateStatus = async (id, newStatus) => {
+            if (activeRole !== 'admin') {
+                showToast('Hanya Bendahara / Admin yang dapat memverifikasi transfer!', 'error');
+                return;
+            }
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'transfers', id);
+                await updateDoc(docRef, { status: newStatus });
+                
+                let msg = newStatus === 'verified' ? 'Transfer berhasil diverifikasi.' : 'Transfer ditolak.';
+                let type = newStatus === 'verified' ? 'success' : 'error';
+                showToast(msg, type);
+            } catch (err) {
+                console.error("Update status error:", err);
+                showToast("Gagal memperbarui status", "error");
+            }
+        };
+
+        window.deleteTransfer = async (id) => {
+            if (activeRole !== 'admin') {
+                showToast('Hanya Admin yang dapat menghapus data transfer!', 'error');
+                return;
+            }
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'transfers', id);
+                await deleteDoc(docRef);
+                showToast('Data transfer dihapus.', 'info');
+            } catch (err) {
+                console.error("Delete error:", err);
+                showToast("Gagal menghapus data", "error");
+            }
+        };
+
+        function renderTable() {
+            let filtered = transfers;
+
+            if (currentFilter !== 'all') {
+                filtered = filtered.filter(t => t.status === currentFilter);
+            }
+
+            if (currentKamarFilter !== 'all') {
+                filtered = filtered.filter(t => t.kamar === currentKamarFilter);
+            }
+
+            if (searchQuery) {
+                filtered = filtered.filter(t => 
+                    (t.santri && t.santri.toLowerCase().includes(searchQuery)) || 
+                    (t.sender && t.sender.toLowerCase().includes(searchQuery)) ||
+                    (t.kamar && t.kamar.toLowerCase().includes(searchQuery)) ||
+                    (t.ustadz && t.ustadz.toLowerCase().includes(searchQuery))
+                );
+            }
+
+            tableBody.innerHTML = '';
+            
+            if (filtered.length === 0) {
+                emptyState.classList.remove('hidden');
+            } else {
+                emptyState.classList.add('hidden');
+                
+                filtered.forEach(t => {
+                    let statusHtml = '';
+                    if (t.status === 'pending') {
+                        statusHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-yellow-500/10 text-yellow-500 border border-yellow-500/20"><i class="ph ph-clock"></i> Pending</span>`;
+                    } else if (t.status === 'verified') {
+                        statusHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-santri-500/10 text-santri-400 border border-santri-500/20"><i class="ph ph-check-circle"></i> Selesai</span>`;
+                    } else {
+                        statusHtml = `<span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-medium bg-red-500/10 text-red-400 border border-red-500/20"><i class="ph ph-x-circle"></i> Ditolak</span>`;
+                    }
+
+                    let actionsHtml = '';
+                    if (activeRole === 'admin') {
+                        actionsHtml = `
+                            <div class="flex justify-end gap-1.5">
+                                ${t.status === 'pending' ? `
+                                    <button onclick="updateStatus('${t.id}', 'verified')" class="p-1.5 bg-santri-500/20 text-santri-400 hover:bg-santri-500/40 rounded-lg transition-colors" title="Setujui Verifikasi">
+                                        <i class="ph ph-check text-base"></i>
+                                    </button>
+                                    <button onclick="updateStatus('${t.id}', 'rejected')" class="p-1.5 bg-red-500/20 text-red-400 hover:bg-red-500/40 rounded-lg transition-colors" title="Tolak Transfer">
+                                        <i class="ph ph-x text-base"></i>
+                                    </button>
+                                ` : ''}
+                                ${t.status === 'verified' ? (t.disbursedToUstadz ? '<span class="text-[10px] text-emerald-400 self-center px-1">Sudah disalurkan ✓</span>' : `<button onclick="confirmDisbursement('${t.id}')" class="px-2 py-1 bg-blue-500/20 text-blue-300 hover:bg-blue-500/40 rounded-lg text-[10px]" title="Konfirmasi uang sudah ditransfer ke ustadz">Konfirmasi ke Ustadz</button>`) : ''}
+                                <button onclick="deleteTransfer('${t.id}')" class="p-1.5 bg-gray-500/20 text-gray-400 hover:bg-red-500/40 hover:text-red-400 rounded-lg transition-colors" title="Hapus Permanen">
+                                    <i class="ph ph-trash text-base"></i>
+                                </button>
+                            </div>
+                        `;
+                    } else {
+                        actionsHtml = `
+                            <div class="text-right text-[11px] text-gray-500">
+                                ${t.status === 'pending' ? '<span class="text-yellow-500/80">Menunggu Verifikasi Bendahara</span>' : (t.disbursedToUstadz ? `<div class="text-emerald-400">Sudah disalurkan • ${t.disbursementDate || ''}</div><div class="text-[10px] text-gray-400 mt-1">Rek: ${t.ustadzBankAccount || '-'}</div>${t.disbursementProofUrl ? `<a class="text-cyan-300 underline text-[10px]" href="${t.disbursementProofUrl}" target="_blank" rel="noopener">Lihat bukti transfer</a>` : ''}` : '<span class="text-santri-400">Tercatat • Menunggu penyaluran</span>')}
+                            </div>
+                        `;
+                    }
+
+                    const tr = document.createElement('tr');
+                    tr.className = 'hover:bg-white/5 transition-all duration-300 border-b border-white/5 group';
+                    tr.innerHTML = `
+                        <td class="p-4 whitespace-nowrap">
+                            <div class="text-xs font-medium text-gray-300">${formatDate(t.date)}</div>
+                            <div class="text-[10px] text-gray-500 mt-0.5">${t.timestamp ? new Date(t.timestamp).toLocaleTimeString('id-ID', {hour: '2-digit', minute:'2-digit'}) : ''}</div>
+                        </td>
+                        <td class="p-4">
+                            <div class="text-xs font-bold text-white">${t.santri || '-'}</div>
+                            <div class="text-[10px] mt-1 inline-flex items-center gap-1 px-2 py-0.5 rounded bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+                                <i class="ph ph-door"></i> ${t.kamar || 'Kamar -'}
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            <div class="text-xs font-medium text-gray-300 flex items-center gap-1">
+                                <i class="ph ph-user text-gray-500"></i> Wali: ${t.sender || '-'}
+                            </div>
+                            <div class="text-[10px] text-gray-500 mt-0.5 flex items-center gap-1">
+                                <i class="ph ph-user-gear"></i> Penginput: ${t.ustadz || '-'}
+                            </div>
+                        </td>
+                        <td class="p-4">
+                            <div class="text-xs font-bold text-santri-400">${formatRp(t.amount)}</div>
+                            <div class="text-[10px] text-gray-400 mt-0.5 flex items-center gap-1">
+                                <i class="ph ph-bank"></i> ${t.bank || '-'}
+                            </div>
+                        </td>
+                        <td class="p-4 whitespace-nowrap">
+                            ${statusHtml}
+                        </td>
+                        <td class="p-4 text-center">
+                            <button onclick="viewImage('${t.id}')" class="inline-flex p-1.5 bg-black/40 hover:bg-santri-900 border border-white/10 hover:border-santri-500 text-gray-300 hover:text-santri-400 rounded-lg transition-all shadow-sm">
+                                <i class="ph ph-image text-base"></i>
+                            </button>
+                        </td>
+                        <td class="p-4">
+                            ${actionsHtml}
+                        </td>
+                    `;
+                    tableBody.appendChild(tr);
+                });
+            }
+        }
+
+        function renderKamarTotals(selectedKamar = '__all') {
+            const el = document.getElementById('kamarTotals');
+            const select = document.getElementById('kamarTotalsSelect');
+            if (!el) return;
+            const totalsSection = document.getElementById('kamarTotalsSection');
+            if (totalsSection) totalsSection.classList.toggle('hidden', activeRole !== 'admin' && !activeUser.kamar);
+            const grouped = {};
+            const scopedVerified = transfers.filter(t => t.status === 'verified' && (activeRole === 'admin' || !activeUser.kamar || activeUser.kamar === 'Semua Kamar' || t.kamar === activeUser.kamar));
+            transfers.filter(t => t.status === 'verified' && (activeRole === 'admin' || !activeUser.kamar || activeUser.kamar === 'Semua Kamar' || t.kamar === activeUser.kamar)).forEach(t => {
+                const kamar = t.kamar || 'Kamar belum ditentukan';
+                if (!grouped[kamar]) grouped[kamar] = { total: 0, count: 0, paid: 0 };
+                grouped[kamar].total += Number(t.amount) || 0;
+                grouped[kamar].count += 1;
+                if (t.disbursedToUstadz) grouped[kamar].paid += Number(t.amount) || 0;
+            });
+            const rows = Object.entries(grouped).sort((a,b) => a[0].localeCompare(b[0], 'id'));
+            if (select) {
+                const old = select.value;
+                select.innerHTML = (activeRole === 'admin' ? '<option value="__all">Semua Kamar</option>' : '') + rows.map(([k]) => `<option value="${k.replace(/&/g,'&amp;').replace(/"/g,'&quot;')}">${k}</option>`).join('');
+                select.value = activeRole !== 'admin' ? (rows[0]?.[0] || '') : (selectedKamar !== '__all' && rows.some(([k]) => k === selectedKamar) ? selectedKamar : (rows.some(([k])=>k===old) ? old : '__all'));
+                selectedKamar = select.value;
+            }
+            const visible = activeRole !== 'admin' ? rows : (selectedKamar === '__all' ? rows : rows.filter(([k]) => k === selectedKamar));
+            el.innerHTML = visible.length ? visible.map(([k,v]) => `<div class="rounded-xl bg-slate-950/60 border border-cyan-400/20 p-3 hover:border-fuchsia-400/40 transition-all"><div class="text-sm font-semibold text-white">${k}</div><div class="text-lg font-bold text-cyan-300 mt-1">${formatRp(v.total)}</div><div class="text-[11px] text-gray-400">${v.count} transaksi • Dikonfirmasi ke ustadz: ${formatRp(v.paid)}</div></div>`).join('') : '<p class="text-xs text-gray-500">Belum ada transfer terverifikasi untuk kamar ini.</p>';
+        }
+
+        window.confirmDisbursement = async (id) => {
+            if (activeRole !== 'admin') { showToast('Hanya Bendahara Pusat yang dapat mengonfirmasi penyaluran.', 'error'); return; }
+            const t = transfers.find(x => x.id === id);
+            if (!t) return;
+            const transferDate = prompt('Tanggal penyaluran (YYYY-MM-DD):', new Date().toISOString().slice(0,10));
+            if (!transferDate) return;
+            const bankAccount = prompt('Nomor rekening bank ustadz penerima:');
+            if (!bankAccount || !bankAccount.trim()) { showToast('Nomor rekening wajib diisi.', 'error'); return; }
+            const receiptUrl = prompt('Tautan bukti transfer (URL gambar/PDF):');
+            if (!receiptUrl || !/^https?:\/\//i.test(receiptUrl.trim())) { showToast('Tautan bukti transfer wajib berupa URL http/https.', 'error'); return; }
+            try {
+                const docRef = doc(db, 'artifacts', appId, 'public', 'data', 'transfers', id);
+                await updateDoc(docRef, { disbursedToUstadz: true, disbursedAt: Date.now(), disbursementDate: transferDate, ustadzBankAccount: bankAccount.trim(), disbursementProofUrl: receiptUrl.trim(), disbursedBy: activeUser.name, assignedUstadz: t.ustadz || '' });
+                showToast(`Konfirmasi transfer ke ${t.ustadz || 'ustadz kamar'} tersimpan.`, 'success');
+            } catch (err) { console.error(err); showToast('Gagal menyimpan konfirmasi penyaluran.', 'error'); }
+        };
+
+        function updateStats() {
+            let scopedTransfers = transfers;
+            if (activeRole === 'ustadz' && activeUser.kamar && activeUser.kamar !== 'Semua Kamar') {
+                scopedTransfers = transfers.filter(t => t.kamar === activeUser.kamar);
+            }
+
+            const verified = scopedTransfers.filter(t => t.status === 'verified');
+            const pending = scopedTransfers.filter(t => t.status === 'pending');
+
+            const totalVerified = verified.reduce((sum, t) => sum + (t.amount || 0), 0);
+            const totalPending = pending.reduce((sum, t) => sum + (t.amount || 0), 0);
+
+            document.getElementById('stat-verified').innerText = formatRp(totalVerified);
+            document.getElementById('stat-verified-count').innerText = `${verified.length} Transaksi Selesai`;
+            
+            document.getElementById('stat-pending').innerText = formatRp(totalPending);
+            document.getElementById('stat-pending-count').innerText = `${pending.length} Transaksi Menunggu`;
+        }
+
+        window.viewImage = (id) => {
+            const t = transfers.find(t => t.id === id);
+            if (t && t.proofImage) {
+                document.getElementById('fullImageView').src = t.proofImage;
+                openModal('imageModal');
+            } else {
+                showToast('Gambar bukti tidak ditemukan.', 'error');
+            }
+        };
+
+        window.exportCSV = () => {
+            if (transfers.length === 0) {
+                showToast('Tidak ada data untuk di-export', 'error');
+                return;
+            }
+
+            let csvContent = "data:text/csv;charset=utf-8,";
+            csvContent += "ID,Tanggal,Nama Santri,Kamar,Nama Ustadz Penginput,Wali/Pengirim,Bank Tujuan,Nominal (Rp),Status\n";
+
+            transfers.forEach(t => {
+                const safeSantri = `"${(t.santri || '').replace(/"/g, '""')}"`;
+                const safeKamar = `"${(t.kamar || '').replace(/"/g, '""')}"`;
+                const safeUstadz = `"${(t.ustadz || '').replace(/"/g, '""')}"`;
+                const safeSender = `"${(t.sender || '').replace(/"/g, '""')}"`;
+                const row = [
+                    t.id, 
+                    t.date, 
+                    safeSantri,
+                    safeKamar,
+                    safeUstadz,
+                    safeSender, 
+                    t.bank, 
+                    t.amount, 
+                    t.status
+                ].join(",");
+                
+                csvContent += row + "\n";
+            });
+
+            const encodedUri = encodeURI(csvContent);
+            const link = document.createElement("a");
+            link.setAttribute("href", encodedUri);
+            link.setAttribute("download", `Rekap_Uang_Saku_Santri_${new Date().toISOString().split('T')[0]}.csv`);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            showToast('Data berhasil diekspor ke file Excel (CSV)', 'success');
+        };
+
+        window.addEventListener('DOMContentLoaded', () => {
+            const inputDate = document.getElementById('inputDate');
+            if (inputDate) inputDate.valueAsDate = new Date();
+            initCloud();
+        });
+    </script>
+</body>
+</html>
